@@ -1,12 +1,16 @@
 
 
 <md-card class="menu-card" *ngFor="let menu of mymenu">
+
+	<img md-card-image src="{{menu.img}}/{{menu.id}}">
+
 	<md-card-header>
 		<div md-card-avatar class="example-header-image"></div>
 		<md-card-title>{{menu.menuname}}</md-card-title>
 		<md-card-subtitle>{{menu.price | currency }}</md-card-subtitle>
+		<favorite></favorite>
 	</md-card-header>
-	<img md-card-image src="{{menu.img}}/{{menu.id}}">
+	
 	<md-card-content>
 		<p>
 			{{menu.description}}

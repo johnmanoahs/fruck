@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FavoriteComponent } from '../favorite/favorite.component';
 
 @Component({
   selector: 'app-mymenu',

@@ -17,5 +17,12 @@
 		<button md-button routerLink="">Home</button>
 		<button md-button>Menu</button>
 		<button md-button routerLink="profile">My Profile</button>
+		<button md-button (click)="login()">Login</button>
+		<button class="md-button" (click)="logout()">Logout</button>
+
+		<md-list *ngIf="isLoggedIn">
+			<img src="{{ photoURL }}" class="navProfilePic" />
+			Welcome {{ displayName }}
+		</md-list>
 	</md-toolbar>
 
