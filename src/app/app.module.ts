@@ -13,6 +13,9 @@ import { ProfileComponent } from './profile/profile.component';
 import { routing } from './app.routing';
 import { MymenuComponent } from './mymenu/mymenu.component';
 import { FavoriteComponent } from './favorite/favorite.component';
+import { AuthGuard} from './auth-guard.service';
+import { AuthService } from './auth.service';
+import { LoginComponent } from './login/login.component';
 
 export const firebaseConfig = {
 
@@ -30,7 +33,8 @@ export const firebaseConfig = {
     NavComponent,
     ProfileComponent,
     MymenuComponent,
-    FavoriteComponent
+    FavoriteComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +45,7 @@ export const firebaseConfig = {
     RouterModule,
     routing
   ],
-  providers: [],
+  providers: [AuthGuard, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

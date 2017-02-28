@@ -1,51 +1,57 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { routing } from '../app.routing'
-import { AngularFire, AuthProviders, AuthMethods } from 'angularfire2';
+import { routing } from '../app.routing';
+
+import { AngularFire, FirebaseAuthState} from 'angularfire2';
+import { AuthService } from '../auth.service';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
   selector: 'navbar',
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.css']
 })
-export class NavComponent implements OnInit {
+export class NavComponent {
 
   isLoggedIn: boolean = false;
   displayName;
   photoURL;
+  FBSubscription: firebase.Promise<FirebaseAuthState>;
 
-  constructor(private af: AngularFire){
-  	console.log(af);
+  constructor(
+  		private _af: AngularFire,
+  		private authservice: AuthService,
+  		private _router: Router
+  		){}
+
+  ngOnInit(){
+  
   }
 
-  ngOnInit() {
-  	this.af.auth.subscribe(authState => {
-  		if(!authState){
-  			console.log("Not logged in")
-  			this.isLoggedIn = false;
-  			this.displayName = null;
-  			this.photoURL = null;
-  		}
-  		else{
-  			this.isLoggedIn = true;
-  			this.displayName = authState.auth.displayName;
-  			this.photoURL = authState.auth.photoURL;
-  			console.log('logged in', authState)
-  		}
-  	})
+  ngOnDestroy(){
+  	//this.FBSubscription.unsubscribe();
   }
 
-  login(){
-  	this.af.auth.login({
-  		provider: AuthProviders.Facebook,
-  		method: AuthMethods.Popup
-  	}).then(authState =>{
-  		console.log("After Login", authState);
+  
+  loginFB(){
+  	this.authservice.loginFB().then(data => {
+  		console.log('data', data);
+  		this.displayName = data.auth.displayName;
+  		this.photoURL = data.auth.photoURL;
+  		this.isLoggedIn = true;
+  		this._router.navigate(['']);
   	})
 
   }
 
   logout(){
-  	this.af.auth.logout();
+  	this.authservice.logout();
+  	this.isLoggedIn = false;
+  	this.displayName = null;
+  	this.photoURL = null;
+  	this._router.navigate(['login']);
+  	console.log('at nav', this.isLoggedIn);
   }
+
 }
+
