@@ -7,75 +7,71 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class AuthService {
-	isLoggedIn = false;
-	displayName;
-	photoURL;
-	fbdata;
+	authservice;
+	obs;
+	profileObservable;
+	ary = [1,2,3];
+	profile = {
+		displayName: null,
+		photoURL: null,
+		isLoggedIn: null
+	}
 
 	constructor(private _af: AngularFire){
+		this.authservice = this._af.auth;
+	}
+
+	observeAuthService(){
+		return this.authservice;
+	}
+
+	newobs(){
+		this.obs = Observable.from([this.ary]);
+		return this.obs;
+	}
+
+	changeobs(){
+		this.ary.push(4);
+		return this.obs;
+		//console.log(this.ary);
+	}
+
+	observeProfile(){
+		this.profileObservable = Observable.from([this.profile]);
+		return this.profileObservable;
 	}
 
 
-	loginFB(): firebase.Promise<FirebaseAuthState>{
+	loginFB(){
 		
 		var promise = this._af.auth.login({
 			provider: AuthProviders.Facebook,
 			method: AuthMethods.Popup,
 			scope: ['public_profile']
-		});
-
-		promise.then(success => {
-			this.isLoggedIn = true}, 
-			error => {
-			this.isLoggedIn = false;
 		})
-		console.log(promise);
-		console.log(typeof promise);
+
+		promise.then(
+			success => {
+				if(success) {
+					this.profile.displayName = success.auth.displayName;
+					this.profile.photoURL = success.auth.photoURL;
+					this.profile.isLoggedIn = true;
+					return this.profileObservable;
+				}
+			}, 
+			error => {
+				this.profile.isLoggedIn = false;
+		})
 		return promise;
 
-		// .then(authstate =>{
-		// 	//console.log(authstate);
-		// 	this.displayName = authstate.auth.displayName;
-		// 	this.photoURL = authstate.auth.photoURL;
-		// 	this.isLoggedIn = true;
-		// 	return authstate;
-		// })
-		//return true;
 	}
 
-	// loginFB(){
-	// 	var subscription = Observable.of(this._af.auth.login({
-	// 		provider: AuthProviders.Facebook,
-	// 		method: AuthMethods.Popup,
-	// 		scope: ['public_profile']
-	// 	})
-	// 	// .then((authState: any) => {
-	// 	// 	if(authState){
-	// 	// 		this._af.database.object('/users/' + authState.uid).update({
-	// 	// 			accessToken: authState.facebook.accessToken
-	// 	// 		})
-	// 	// 		// this.fbdata.displayName = authState.auth.displayName;
-	// 	// 		// this.fbdata.photoURL = authState.auth.photoURL;
-	// 	// 		// this.fbdata.isLoggedIn = true;
-	// 	// 		return authState;
-	// 	// 	}
-	// 	// 	else{
-	// 	// 		// this.fbdata.displayName= null;
-	// 	// 		// this.fbdata.photoURL = null;
-	// 	// 		// this.fbdata.isLoggedIn = false;
-	// 	// 		return false;
-	// 	// 	}
-	// 	// })
-	// 	);
 
-	// 	return subscription;
-
-	// 	////Observable.fromPromise
-
-	// 	}
-
-		logout(){
-			this.isLoggedIn = false;
-			return false;
-		}
+	logout(){
+		this._af.auth.logout();
+		this.profile.displayName = null;
+		this.profile.photoURL = null;
+		this.profile.isLoggedIn = false;
+		return this.profileObservable;
+	}
 	}

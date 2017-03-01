@@ -15,18 +15,19 @@
 			<md-icon>menu</md-icon>
 		</button>
 
-		<md-list *ngIf="isLoggedIn">
-			<!-- <button md-button >Home</button> -->
-			<button md-button routerLink="">Menu</button>
+		<md-list *ngIf="(profile.array[0].isLoggedIn)">
+		<!-- <md-list> -->
+			<!-- <button md-button (click)="changeobs()">Home</button> -->
+			<button md-button routerLink="">My Menu</button>
 			<button md-button routerLink="profile">My Profile</button>
 			<button md-button (click)="logout()">Logout</button>
-			<img src="{{ photoURL }}" class="navProfilePic" />
-			Welcome {{ displayName }}
+			<img src="{{ (profile.array[0].photoURL)  }}" class="navProfilePic" />
+			Welcome {{ (profile.array[0].displayName) }}
 		</md-list>
 		
-		<md-list *ngIf="!isLoggedIn">
+		<!-- <md-list *ngIf="!isLoggedIn">
 			<button md-button (click)="loginFB()">Login</button>
-		</md-list>
+		</md-list> -->
 		
 	</md-toolbar>
 

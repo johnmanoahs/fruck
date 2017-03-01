@@ -45,6 +45,7 @@ export const firebaseConfig = {
     RouterModule,
     routing
   ],
+  exports: [NavComponent],
   providers: [AuthGuard, AuthService],
   bootstrap: [AppComponent]
 })
