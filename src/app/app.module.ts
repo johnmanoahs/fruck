@@ -16,6 +16,9 @@ import { FavoriteComponent } from './favorite/favorite.component';
 import { AuthGuard} from './auth-guard.service';
 import { AuthService } from './auth.service';
 import { LoginComponent } from './login/login.component';
+import { Observable } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 
 export const firebaseConfig = {
 
@@ -46,7 +49,7 @@ export const firebaseConfig = {
     routing
   ],
   exports: [NavComponent],
-  providers: [AuthGuard, AuthService],
+  providers: [AuthGuard, AuthService, Subject],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

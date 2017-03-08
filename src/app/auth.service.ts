@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFire, AuthProviders, AuthMethods, FirebaseAuthState } from 'angularfire2';
 
 import { Observable } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/toPromise';
 //import 'rxjs/add/operator/fromPromise';
 
@@ -14,10 +16,11 @@ export class AuthService {
 	profile = {
 		displayName: null,
 		photoURL: null,
-		isLoggedIn: null
+		isLoggedIn: null,
+		redirect: 'login'
 	}
 
-	constructor(private _af: AngularFire){
+	constructor(private _af: AngularFire, private subject: Subject<any>){
 		this.authservice = this._af.auth;
 	}
 
@@ -37,8 +40,9 @@ export class AuthService {
 	}
 
 	observeProfile(){
-		this.profileObservable = Observable.from([this.profile]);
-		return this.profileObservable;
+		// this.profileObservable = Observable.from([this.profile]);
+		// return this.profileObservable;
+		return this.subject.asObservable();
 	}
 
 
@@ -56,7 +60,9 @@ export class AuthService {
 					this.profile.displayName = success.auth.displayName;
 					this.profile.photoURL = success.auth.photoURL;
 					this.profile.isLoggedIn = true;
-					return this.profileObservable;
+					this.profile.redirect = ''
+					this.subject.next({ profile: this.profile});
+					//return this.profileObservable;
 				}
 			}, 
 			error => {
@@ -72,6 +78,7 @@ export class AuthService {
 		this.profile.displayName = null;
 		this.profile.photoURL = null;
 		this.profile.isLoggedIn = false;
+		this.profile.redirect = 'login';
 		return this.profileObservable;
 	}
 	}

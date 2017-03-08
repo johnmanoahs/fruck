@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from './auth.service';
 import {Observable } from 'rxjs/Rx';
+import { Subscription } from 'rxjs/Subscription';
 
 
 @Component({
@@ -12,11 +13,11 @@ export class AppComponent {
   title = 'app works!';
 
   constructor(private as: AuthService){
-  	Observable.of(as.authservice).subscribe(displayname => {
+  	// Observable.of(as.).subscribe(displayname => {
 
-  		console.log('displayname',displayname)
+  	// 	console.log('displayname',displayname)
 
-  	});
+  	// });
   }
 
 }
